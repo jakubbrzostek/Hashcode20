@@ -1,13 +1,10 @@
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class Scanning {
 
     private List<Integer> allScannedBooks;
 
-    public void process (List<Library> libraryList, int days, String resultPath) {
+    public void process(List<Library> libraryList, int days, Map<Integer, Integer> orderedBookScores, String resultPath) {
         allScannedBooks = new List<Integer>() {
             @Override
             public int size() {

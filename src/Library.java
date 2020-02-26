@@ -1,23 +1,26 @@
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.*;
+import java.security.KeyStore;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
 public class Library {
 
     private int libraryId;
-    private int[] books;
+    private ArrayList books;
     private int[] booksByScore;
+    private int booksByScoreLength;
     private List<Integer> scannedBooks;
+    private List<Integer> deletedBooks;
     private int signUpProcessDays;
     private int booksPerDay;
     private long possibleMaxScore;
     private double pointer;
     private boolean signUpProcessing;
 
-    Library(int libraryId, int[] books, int signUpProcessDays, int booksPerDay, List<Integer> scannedBooks) {
+    Library(int libraryId, ArrayList books, int signUpProcessDays, int booksPerDay, List<Integer> scannedBooks) {
         this.libraryId = libraryId;
         this.books = books;
         this.signUpProcessDays = signUpProcessDays;
@@ -25,16 +28,27 @@ public class Library {
         this.scannedBooks = scannedBooks;
     }
 
+    public void createValues (Map<Integer,Integer> orderedBookScores, int days) {
 
-    public void createValues (Map<Integer,Integer> bookScores) {
-        Map<Integer,Integer> orderedBookScores = bookScores
-                                        .entrySet()
-                                        .stream()
-                                        .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                                        .collect(
-                                                toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-                                                        LinkedHashMap::new));
-        possibleMaxScore = orderedBookScores.
+        long maxPossibleBooks = days * (long) booksPerDay - signUpProcessDays * (long)booksPerDay;
+        if (maxPossibleBooks > books.size()) {
+            maxPossibleBooks = books.size();
+        }
+
+        Map<Integer,Integer> matchedBooks = orderedBookScores.entrySet().stream().filter(pair -> books.contains(pair.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        List keyValuePairs = Arrays.asList(matchedBooks);
+        //possibleMaxScore = keyValuePairs.stream().filter(keyValuePairs.size() >= (int) maxPossibleBooks ? (int)maxPossibleBooks : keyValuePairs.size()).count(x -> x.getValue)
+
+        booksByScore = orderedBookScores.entrySet().stream().filter(pair -> books.contains(pair.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (booksByScore.length >= maxPossibleBooks) {
+            long finalMaxPossibleBooks = maxPossibleBooks;
+            deletedBooks = Arrays.stream(booksByScore).filter((i, i1) -> i1 >= finalMaxPossibleBooks).collect(Collectors.toList());
+            booksByScore = Arrays.stream(booksByScore).limit(maxPossibleBooks).toArray();
+        }
+        booksByScoreLength = booksByScore.length;
+
+        pointer = possibleMaxScore / (double) signUpProcessDays;
     }
 
     public boolean signUpProcess() {

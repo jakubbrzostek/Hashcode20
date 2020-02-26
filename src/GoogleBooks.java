@@ -1,5 +1,7 @@
 import java.util.*;
 
+import static java.util.stream.Collectors.toMap;
+
 public class GoogleBooks {
 
     public static void main(String[] args) {
@@ -25,6 +27,14 @@ public class GoogleBooks {
             for (int i = 0; i < books; i++) {
                 bookScores.put(i, scores[i]);
             }
+
+            Map<Integer,Integer> orderedBookScores = bookScores
+                    .entrySet()
+                    .stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                    .collect(
+                            toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                    LinkedHashMap::new));
 
             List<Library> libraries = new List<Library>() {
 
@@ -269,9 +279,13 @@ public class GoogleBooks {
                                 }
                         )
                 );
-                libraries.get(libraries.size() - 1).createValues(bookScores);
+                libraries.get(libraries.size() - 1).createValues(orderedBookScores, days);
                 counter++;
             }
+
+            Scanning scanning = new Scanning();
+            String resultPath = "";
+            scanning.process( libraries, days, orderedBookScores, resultPath);
 
 
         }
