@@ -20,12 +20,11 @@ public class Library {
     private double pointer;
     private boolean signUpProcessing;
 
-    Library(int libraryId, ArrayList books, int signUpProcessDays, int booksPerDay, List<Integer> scannedBooks) {
+    Library(int libraryId, ArrayList books, int signUpProcessDays, int booksPerDay) {
         this.libraryId = libraryId;
         this.books = books;
         this.signUpProcessDays = signUpProcessDays;
         this.booksPerDay = booksPerDay;
-        this.scannedBooks = scannedBooks;
     }
 
     public void createValues (Map<Integer,Integer> orderedBookScores, int days) {
@@ -39,11 +38,11 @@ public class Library {
         List keyValuePairs = Arrays.asList(matchedBooks);
         //possibleMaxScore = keyValuePairs.stream().filter(keyValuePairs.size() >= (int) maxPossibleBooks ? (int)maxPossibleBooks : keyValuePairs.size()).count(x -> x.getValue)
 
-        booksByScore = orderedBookScores.entrySet().stream().filter(pair -> books.contains(pair.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        //booksByScore = orderedBookScores.entrySet().stream().filter(pair -> books.contains(pair.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         if (booksByScore.length >= maxPossibleBooks) {
             long finalMaxPossibleBooks = maxPossibleBooks;
-            deletedBooks = Arrays.stream(booksByScore).filter((i, i1) -> i1 >= finalMaxPossibleBooks).collect(Collectors.toList());
+            //deletedBooks = Arrays.stream(booksByScore).filter((i, i1) -> i1 >= finalMaxPossibleBooks).collect(Collectors.toList());
             booksByScore = Arrays.stream(booksByScore).limit(maxPossibleBooks).toArray();
         }
         booksByScoreLength = booksByScore.length;
