@@ -1,3 +1,5 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -30,7 +32,7 @@ public class GoogleBooks {
                 bookScores.put(i, scores[i]);
             }
 
-            Map<Integer,Integer> orderedBookScores = bookScores
+            Map<Integer, Integer> orderedBookScores = bookScores
                     .entrySet()
                     .stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -38,123 +40,8 @@ public class GoogleBooks {
                             toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                     LinkedHashMap::new));
 
-            List<Library> libraries = new List<Library>() {
 
-                @Override
-                public int size() {
-                    return 0;
-                }
-
-                @Override
-                public boolean isEmpty() {
-                    return false;
-                }
-
-                @Override
-                public boolean contains(Object o) {
-                    return false;
-                }
-
-                @Override
-                public Iterator<Library> iterator() {
-                    return null;
-                }
-
-                @Override
-                public Object[] toArray() {
-                    return new Object[0];
-                }
-
-                @Override
-                public <T> T[] toArray(T[] a) {
-                    return null;
-                }
-
-                @Override
-                public boolean add(Library library) {
-                    return false;
-                }
-
-                @Override
-                public boolean remove(Object o) {
-                    return false;
-                }
-
-                @Override
-                public boolean containsAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(Collection<? extends Library> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(int index, Collection<? extends Library> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean removeAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean retainAll(Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public void clear() {
-
-                }
-
-                @Override
-                public Library get(int index) {
-                    return null;
-                }
-
-                @Override
-                public Library set(int index, Library element) {
-                    return null;
-                }
-
-                @Override
-                public void add(int index, Library element) {
-
-                }
-
-                @Override
-                public Library remove(int index) {
-                    return null;
-                }
-
-                @Override
-                public int indexOf(Object o) {
-                    return 0;
-                }
-
-                @Override
-                public int lastIndexOf(Object o) {
-                    return 0;
-                }
-
-                @Override
-                public ListIterator<Library> listIterator() {
-                    return null;
-                }
-
-                @Override
-                public ListIterator<Library> listIterator(int index) {
-                    return null;
-                }
-
-                @Override
-                public List<Library> subList(int fromIndex, int toIndex) {
-                    return null;
-                }
-            };
+            List<Library> libraries = new ArrayList<>();
             int counter = 0;
 
             for (int i = 2; i < splitted.length - 2; i += 2) {
@@ -170,9 +57,8 @@ public class GoogleBooks {
             }
 
             Scanning scanning = new Scanning();
-            String resultPath = "";
-            scanning.process( libraries, days, orderedBookScores, resultPath);
-
+            String resultPath = (Paths.get("").toAbsolutePath()).resolve(dataSet.getKey()).toString();
+            scanning.process(libraries, days, orderedBookScores, resultPath);
 
         }
     }
