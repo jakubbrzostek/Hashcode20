@@ -58,17 +58,16 @@ public class Library {
 
         if (booksByScore.size() >= maxPossibleBooks) {
 
-            deletedBooks = booksByScore.subList((int)maxPossibleBooks + 1, booksByScore.size());
+            setDeletedBooks(booksByScore.subList((int) maxPossibleBooks + 1, booksByScore.size()));
             booksByScore = booksByScore.subList(0, (int) maxPossibleBooks);
         }
 
-        booksByScoreLength = booksByScore.size();
-
-        pointer = possibleMaxScore / (double) signUpProcessDays;
+        setBooksByScoreLength(booksByScore.size());
+        setPointer(possibleMaxScore / (double) signUpProcessDays);
     }
 
-    public void recalculateValues( Map<Integer, Integer> orderedBookScores, int daysLeft ) {
-        long maxPossibleBooks = daysLeft * (long)booksPerDay - signUpProcessDays * (long) booksPerDay;
+    public void recalculateValues(Map<Integer, Integer> orderedBookScores, int daysLeft) {
+        long maxPossibleBooks = daysLeft * (long) booksPerDay - signUpProcessDays * (long) booksPerDay;
         if (maxPossibleBooks > books.size()) {
             maxPossibleBooks = books.size();
         }
@@ -115,10 +114,11 @@ public class Library {
     public List<Integer> scanningProcess(List<Integer> allScannedBooks) {
 
         List<Integer> result = new ArrayList<>(
-                booksByScore.subList(0, Math.min(booksPerDay,booksByScore.size()))
-        ){};
+                booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size()))
+        ) {};
 
-        scannedBooks.addAll(booksByScore.subList(0, Math.min(booksPerDay,booksByScore.size())));
+        scannedBooks.addAll(
+                booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size())));
 
         booksByScore =
                 booksByScore.stream()
@@ -136,6 +136,22 @@ public class Library {
         this.libraryId = libraryId;
     }
 
+    public double getPointer() {
+        return pointer;
+    }
+
+    public void setPointer(double pointer) {
+        this.pointer = pointer;
+    }
+
+    public List<Integer> getBooksByScore() {
+        return booksByScore;
+    }
+
+    public void setBooksByScore(List<Integer> booksByScore) {
+        this.booksByScore = booksByScore;
+    }
+
     public boolean isSignUpProcessing() {
         return this.signUpProcessing;
     }
@@ -143,4 +159,21 @@ public class Library {
     public void setSignUpProcessing(boolean signUpProcessing) {
         this.signUpProcessing = signUpProcessing;
     }
+
+    public void setBooksByScoreLength(int booksByScoreLength) {
+        this.booksByScoreLength = booksByScoreLength;
+    }
+
+    public int getBooksByScoreLength() {
+        return booksByScoreLength;
+    }
+
+    public List<Integer> getDeletedBooks() {
+        return deletedBooks;
+    }
+
+    public void setDeletedBooks(List<Integer> deletedBooks) {
+        this.deletedBooks = deletedBooks;
+    }
+
 }
