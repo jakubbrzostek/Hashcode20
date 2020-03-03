@@ -1,16 +1,11 @@
-import javax.swing.*;
-import java.security.KeyStore;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
 
 public class Library {
 
     private int libraryId;
-    private ArrayList books;
-    private ArrayList booksByScore;
+    private ArrayList<Integer> books;
+    private List<Integer> booksByScore;
     private int booksByScoreLength;
     private List<Integer> scannedBooks;
     private List<Integer> deletedBooks;
@@ -20,7 +15,7 @@ public class Library {
     private double pointer;
     private boolean signUpProcessing;
 
-    Library(int libraryId, ArrayList books, int signUpProcessDays, int booksPerDay) {
+    Library(int libraryId, ArrayList<Integer> books, int signUpProcessDays, int booksPerDay) {
         this.libraryId = libraryId;
         this.books = books;
         this.signUpProcessDays = signUpProcessDays;
@@ -54,18 +49,19 @@ public class Library {
                         .map(e -> new Pair<>(e.getKey(), e.getValue()))
                         .limit(Math.min(keyValuePairs.size(), (int) maxPossibleBooks))
                         .mapToInt(Pair::getRight).sum();
-//TODO
+
         booksByScore =
-                orderedBookScores.entrySet()
+                orderedBookScores.keySet()
                         .stream()
-                        .filter(pair -> books.contains(pair.getKey()))
-                        .collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
+                        .filter(books::contains)
+                        .collect(Collectors.toList());
 
         if (booksByScore.size() >= maxPossibleBooks) {
-            long finalMaxPossibleBooks = maxPossibleBooks;
-            //deletedBooks = Arrays.stream(booksByScore).filter((i, i1) -> i1 >= finalMaxPossibleBooks).collect(Collectors.toList());
-            //booksByScore = booksByScore.stream().limit(maxPossibleBooks).toArray();
+
+            deletedBooks = booksByScore.subList((int)maxPossibleBooks + 1, booksByScore.size());
+            booksByScore = booksByScore.subList(0, (int) maxPossibleBooks);
         }
+
         booksByScoreLength = booksByScore.size();
 
         pointer = possibleMaxScore / (double) signUpProcessDays;
@@ -117,8 +113,19 @@ public class Library {
     }
 
     public List<Integer> scanningProcess(List<Integer> allScannedBooks) {
-        //List<Integer> result = new ArrayList<>( booksByScore.length >= booksPerDay ? booksByScore.) {}
-        return null;
+
+        List<Integer> result = new ArrayList<>(
+                booksByScore.subList(0, Math.min(booksPerDay,booksByScore.size()))
+        ){};
+
+        scannedBooks.addAll(booksByScore.subList(0, Math.min(booksPerDay,booksByScore.size())));
+
+        booksByScore =
+                booksByScore.stream()
+                        .skip(Math.min(booksByScore.size(), booksPerDay))
+                        .collect(Collectors.toList());
+
+        return result;
     }
 
     public int getLibraryId() {
