@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -8,7 +9,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class GoogleBooks {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Map<String, String> dataSets = new HashMap<String, String>() {
             {

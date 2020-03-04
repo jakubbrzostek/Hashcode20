@@ -24,7 +24,7 @@ public class Library {
 
     public void createValues(Map<Integer, Integer> orderedBookScores, int days) {
 
-        long maxPossibleBooks = days * (long) booksPerDay - signUpProcessDays * (long) booksPerDay;
+        long maxPossibleBooks = days * (long) booksPerDay - getSignUpProcessDays() * (long) booksPerDay;
         if (maxPossibleBooks > books.size()) {
             maxPossibleBooks = books.size();
         }
@@ -63,11 +63,11 @@ public class Library {
         }
 
         setBooksByScoreLength(booksByScore.size());
-        setPointer(possibleMaxScore / (double) signUpProcessDays);
+        setPointer(possibleMaxScore / (double) getSignUpProcessDays());
     }
 
     public void recalculateValues(Map<Integer, Integer> orderedBookScores, int daysLeft) {
-        long maxPossibleBooks = daysLeft * (long) booksPerDay - signUpProcessDays * (long) booksPerDay;
+        long maxPossibleBooks = daysLeft * (long) booksPerDay - getSignUpProcessDays() * (long) booksPerDay;
         if (maxPossibleBooks > books.size()) {
             maxPossibleBooks = books.size();
         }
@@ -93,19 +93,19 @@ public class Library {
                         .limit(Math.min(keyValuePairs.size(), (int) maxPossibleBooks))
                         .mapToInt(Pair::getRight).sum();
 
-        pointer = possibleMaxScore / (double) signUpProcessDays;
+        pointer = possibleMaxScore / (double) getSignUpProcessDays();
     }
 
     public boolean signUpProcess() {
-        if (signUpProcessDays == 0) {
+        if (getSignUpProcessDays() == 0) {
             return false;
         }
         if (!isSignUpProcessing()) {
             setSignUpProcessing(true);
         }
 
-        signUpProcessDays -= 1;
-        if (signUpProcessDays == 0) {
+        setSignUpProcessDays(getSignUpProcessDays() -1);
+        if (getSignUpProcessDays() == 0) {
             setSignUpProcessing(false);
         }
         return false;
@@ -117,7 +117,7 @@ public class Library {
                 booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size()))
         ) {};
 
-        scannedBooks.addAll(
+        setScannedBooks(
                 booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size())));
 
         booksByScore =
@@ -174,6 +174,22 @@ public class Library {
 
     public void setDeletedBooks(List<Integer> deletedBooks) {
         this.deletedBooks = deletedBooks;
+    }
+
+    public List<Integer> getScannedBooks() {
+        return scannedBooks;
+    }
+
+    public void setScannedBooks(List<Integer> scannedBooks) {
+        this.scannedBooks = scannedBooks;
+    }
+
+    public int getSignUpProcessDays() {
+        return signUpProcessDays;
+    }
+
+    public void setSignUpProcessDays(int signUpProcessDays) {
+        this.signUpProcessDays = signUpProcessDays;
     }
 
 }
