@@ -1,9 +1,12 @@
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 import static java.util.stream.Collectors.toMap;
 
@@ -13,17 +16,18 @@ public class GoogleBooks {
 
         Map<String, String> dataSets = new HashMap<String, String>() {
             {
-                put("a_example.txt", String.valueOf(getClass().getClassLoader().getResource("a_example.txt")));
-                put("b_read_on.txt", String.valueOf(getClass().getClassLoader().getResource("b_read_on.txt")));
-                put("c_incunabula.txt", String.valueOf(getClass().getClassLoader().getResource("c_incunabula.txt")));
-                put("d_tough_choices.txt", String.valueOf(getClass().getClassLoader().getResource("d_tough_choices.txt")));
-                put("e_so_many_books.txt", String.valueOf(getClass().getClassLoader().getResource("e_so_many_books.txt")));
-                put("f_libraries_of_the_world.txt", String.valueOf(getClass().getClassLoader().getResource("f_libraries_of_the_world.txt")));
+                put("a_example.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/a_example.txt"))));
+//                put("b_read_on.txt", String.valueOf(getClass().getClassLoader().getResource("b_read_on.txt")));
+//                put("c_incunabula.txt", String.valueOf(getClass().getClassLoader().getResource("c_incunabula.txt")));
+//                put("d_tough_choices.txt", String.valueOf(getClass().getClassLoader().getResource("d_tough_choices.txt")));
+//                put("e_so_many_books.txt", String.valueOf(getClass().getClassLoader().getResource("e_so_many_books.txt")));
+//                put("f_libraries_of_the_world.txt", String.valueOf(getClass().getClassLoader().getResource("f_libraries_of_the_world.txt")));
             }
         };
 
         for (Map.Entry<String, String> dataSet : dataSets.entrySet()) {
             String[] splitted = dataSet.getValue().split("\n");
+            System.out.println(Arrays.asList(splitted));
             int books = Integer.parseInt(splitted[0].split(" ")[0]);
             int days = Integer.parseInt(splitted[0].split(" ")[2]);
             int[] scores = Arrays.stream(splitted[1].split(" ")).mapToInt(Integer::parseInt).toArray();

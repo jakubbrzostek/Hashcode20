@@ -3,6 +3,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Scanning {
@@ -173,7 +174,12 @@ public class Scanning {
                 }
 
                 //Kolejny element do zainsertowania
-                Library firstElementToInsert = orderedLibraries.stream().
+                Library firstElementToInsert =
+                        orderedLibraries
+                                .stream()
+                                .filter((Predicate<? super Library>) orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter))
+                                .findFirst()
+                                .orElse(null);
 
                 //Jeśli nie ma pierwszego elementu to nie dodajemy
                 if (firstElementToInsert == null) { continue;}
@@ -197,14 +203,26 @@ public class Scanning {
                             .filter(library -> library.getScannedBooks().size() > 0)
                             .collect(Collectors.toList());
 
-            result.append(
-                    librariesThatScannedBooks
-                            .stream()
-                            .reduce("", (current, library) -> current + library.getLibraryId() + " " +
-                                    library.getScannedBooks().size() + "\n" +
-                                    library.getScannedBooks()
+            for (Library libraryThatScannedBooks : librariesThatScannedBooks) {
+                result.append(libraryThatScannedBooks.getLibraryId())
+                        .append(" ")
+                            .append(libraryThatScannedBooks.getScannedBooks().size())
+                                .append("\n")
+                                    .append(libraryThatScannedBooks.getScannedBooks()
                                             .stream()
-                                            .reduce("", (s, bookId) -> Integer.valueOf(s + bookId.toString() + " ")) + "\n"));
+                                            .map(Object::toString)
+                                            .collect(Collectors.joining(" ")) )
+                                                .append("\n");
+            }
+
+//            result.append(
+//                    librariesThatScannedBooks
+//                            .stream()
+//                            .reduce("", (current, library) -> current + library.getLibraryId() + " " +
+//                                    library.getScannedBooks().size() + "\n" +
+//                                    library.getScannedBooks()
+//                                            .stream()
+//                                            .reduce("", (s , bookId) -> s + bookId + " ") + "\n"));
 
             Files.write(Paths.get(resultPath), Arrays.asList(result.toString().trim()), StandardCharsets.UTF_8);
         }
