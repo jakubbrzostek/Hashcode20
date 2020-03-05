@@ -27,7 +27,6 @@ public class GoogleBooks {
 
         for (Map.Entry<String, String> dataSet : dataSets.entrySet()) {
             String[] splitted = dataSet.getValue().split("\n");
-            System.out.println(Arrays.asList(splitted));
             int books = Integer.parseInt(splitted[0].split(" ")[0]);
             int days = Integer.parseInt(splitted[0].split(" ")[2]);
             int[] scores = Arrays.stream(splitted[1].split(" ")).mapToInt(Integer::parseInt).toArray();
@@ -45,14 +44,13 @@ public class GoogleBooks {
                             toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                     LinkedHashMap::new));
 
-
             List<Library> libraries = new ArrayList<>();
             int counter = 0;
 
             for (int i = 2; i < splitted.length - 2; i += 2) {
                 libraries.add(new Library(
                                 counter,
-                                IntStream.of(Integer.parseInt(Arrays.toString(splitted[1].split(" ")))).boxed().collect(Collectors.toCollection(ArrayList::new)),
+                                new ArrayList<>(Arrays.stream(splitted[1].split(" ")).map(Integer::parseInt).collect(Collectors.toList())),
                                 Integer.parseInt(splitted[i].split(" ")[1]),
                                 Integer.parseInt(splitted[i].split(" ")[2])
                         )

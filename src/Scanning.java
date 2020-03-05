@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 
 public class Scanning {
 
-    private List<Integer> allScannedBooks;
-
-    //allScannedBooks = new ArrayList<>();
+    List<Integer> allScannedBooks = new ArrayList<>();
 
     public void process(List<Library> libraryList, int days, Map<Integer, Integer> orderedBookScores, String resultPath) throws IOException {
 
@@ -162,7 +160,7 @@ public class Scanning {
                                 .collect(Collectors.toList()) );
 
                 if (library.getSignUpProcessDays() == 0 && library.getBooksByScore().size() > 0 ||
-                        (actualSignUpLibrary.equals(library)) && library.signUpProcess()
+                        (Objects.equals(actualSignUpLibrary, library)) && library.signUpProcess()
                 ) {
                     //Skanujemy i przypisujemy zeskanowane do listy wszystkich zeskanowanych
                     allScannedBooks.addAll(library.scanningProcess(allScannedBooks));
@@ -174,18 +172,13 @@ public class Scanning {
                 }
 
                 //Kolejny element do zainsertowania
-                Library firstElementToInsert =
-                        orderedLibraries
-                                .stream()
-                                .filter((Predicate<? super Library>) orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter))
-                                .findFirst()
-                                .orElse(null);
+                Library firstElementToInsert = orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1);
 
                 //Jeśli nie ma pierwszego elementu to nie dodajemy
                 if (firstElementToInsert == null) { continue;}
 
                 //Insertujemy element do listy i podnosimy licznik
-                copiedOrderedLibraries.add(orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter));
+                copiedOrderedLibraries.add(orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1));
                 orderedLibrariesCounter--;
             }
 
