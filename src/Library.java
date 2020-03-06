@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Library {
 
@@ -57,9 +58,25 @@ public class Library {
                         .collect(Collectors.toList());
 
         if (booksByScore.size() >= maxPossibleBooks) {
+            long finalMaxPossibleBooks = maxPossibleBooks;
 
-            setDeletedBooks(booksByScore.subList((int) maxPossibleBooks + 1, booksByScore.size()));
-            booksByScore = booksByScore.subList(0, (int) maxPossibleBooks);
+            if (getDeletedBooks() == null) {
+                deletedBooks = new ArrayList<>();
+            } else {
+                getDeletedBooks().addAll(
+                        IntStream
+                                .range(0, booksByScore.size())
+                                .filter(index -> index >= finalMaxPossibleBooks)
+                                .mapToObj(index -> booksByScore.get(index))
+                                .collect(Collectors.toList()));
+            }
+
+            booksByScore =
+                    booksByScore
+                            .stream()
+                            .limit(maxPossibleBooks)
+                            .collect(Collectors.toList());
+                    //booksByScore.subList(0, (int) maxPossibleBooks);
         }
 
         setBooksByScoreLength(booksByScore.size());
@@ -117,8 +134,12 @@ public class Library {
                 booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size()))
         ) {};
 
-        setScannedBooks(
-                booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size())));
+        if (getScannedBooks() == null) {
+            scannedBooks = new ArrayList<>();
+        } else {
+
+            getScannedBooks().addAll(booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size() ) ) );
+        }
 
         booksByScore =
                 booksByScore.stream()

@@ -26,6 +26,9 @@ public class Scanning {
 
          */
 //TODO - przemysleć czy nie zmienić na pętle  foreach
+//        for (Library orderedLibrary : orderedLibraries) {
+//            orderedLibrary.
+//        }
         List<Library> finalOrderedLibraries = orderedLibraries;
         orderedLibraries.forEach(library -> {
             List<Integer> tmpList = new ArrayList<>();
@@ -139,49 +142,49 @@ public class Scanning {
 
         }
 
-         //Przypisujemy pierwszy i będziemy zwiększać w pętli, żeby od razu nie iterować po wszystkich posortowanych bibliotekach
-        int orderedLibrariesCounter = orderedLibraries.size();
-        List<Library> copiedOrderedLibraries = new ArrayList<Library>();
-        copiedOrderedLibraries.add(orderedLibraries.get(0));
-        orderedLibrariesCounter--;
+//         //Przypisujemy pierwszy i będziemy zwiększać w pętli, żeby od razu nie iterować po wszystkich posortowanych bibliotekach
+//        int orderedLibrariesCounter = orderedLibraries.size();
+//        List<Library> copiedOrderedLibraries = new ArrayList<Library>();
+//        copiedOrderedLibraries.add(orderedLibraries.get(0));
+//        orderedLibrariesCounter--;
 
         //Proces skanowania
         for (int i = 0; i <= days; i++) {
 
-            for (Library library : copiedOrderedLibraries) {
+            for (Library library : orderedLibraries) {
 
-                Library actualSignUpLibrary = copiedOrderedLibraries.stream().filter(Library::isSignUpProcessing).findFirst().orElse(null);
+                Library actualSignUpLibrary = orderedLibraries.stream().filter(Library::isSignUpProcessing).findFirst().orElse(null);
 
                 //Przypisujemy tylko niezeskanowane ksiażki
                 library.setBooksByScore(
                         library.getBooksByScore()
                                 .stream()
                                 .filter(e -> !allScannedBooks.contains(e))
-                                .collect(Collectors.toList()) );
+                                .collect(Collectors.toList()));
 
                 if (library.getSignUpProcessDays() == 0 && library.getBooksByScore().size() > 0 ||
-                        (Objects.equals(actualSignUpLibrary, library)) && library.signUpProcess()
+                        (actualSignUpLibrary == null || actualSignUpLibrary.equals(library)) && library.signUpProcess()
                 ) {
                     //Skanujemy i przypisujemy zeskanowane do listy wszystkich zeskanowanych
                     allScannedBooks.addAll(library.scanningProcess(allScannedBooks));
                 }
 
-                //Jeśli w ostatniej bibliotece trwa rejestracja to nie dodajemy kolejnych
-                if ( copiedOrderedLibraries.get(copiedOrderedLibraries.size() - 1).isSignUpProcessing()) {
-                    continue;
-                }
-
-                //Kolejny element do zainsertowania
-                Library firstElementToInsert = orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1);
-
-                //Jeśli nie ma pierwszego elementu to nie dodajemy
-                if (firstElementToInsert == null) { continue;}
-
-                //Insertujemy element do listy i podnosimy licznik
-                copiedOrderedLibraries.add(orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1));
-                orderedLibrariesCounter--;
+//                //Jeśli w ostatniej bibliotece trwa rejestracja to nie dodajemy kolejnych
+//                if ( copiedOrderedLibraries.get(copiedOrderedLibraries.size() - 1).isSignUpProcessing()) {
+//                    continue;
+//                }
+//
+//                //Kolejny element do zainsertowania
+//                Library firstElementToInsert = orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1);
+//
+//                //Jeśli nie ma pierwszego elementu to nie dodajemy
+//                if (firstElementToInsert == null) { continue;}
+//
+//                //Insertujemy element do listy i podnosimy licznik
+//                copiedOrderedLibraries.add(orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1));
+//                orderedLibrariesCounter--;
             }
-
+        }
             int countScannedLibraries =
                     (int) orderedLibraries
                             .stream()
@@ -208,18 +211,7 @@ public class Scanning {
                                                 .append("\n");
             }
 
-//            result.append(
-//                    librariesThatScannedBooks
-//                            .stream()
-//                            .reduce("", (current, library) -> current + library.getLibraryId() + " " +
-//                                    library.getScannedBooks().size() + "\n" +
-//                                    library.getScannedBooks()
-//                                            .stream()
-//                                            .reduce("", (s , bookId) -> s + bookId + " ") + "\n"));
-
             Files.write(Paths.get(resultPath), Arrays.asList(result.toString().trim()), StandardCharsets.UTF_8);
         }
 
-
-    }
 }
