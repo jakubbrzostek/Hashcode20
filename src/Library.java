@@ -136,7 +136,7 @@ public class Library {
         ) {};
 
         if (getScannedBooks() == null) {
-            scannedBooks = new ArrayList<>();
+            setScannedBooks(scannedBooks = new ArrayList<>());
         } else {
             scannedBooks.addAll(
                     booksByScore.size() >= booksPerDay ?
