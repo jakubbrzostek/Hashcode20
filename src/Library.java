@@ -136,7 +136,7 @@ public class Library {
         ) {};
 
         if (getScannedBooks() == null) {
-            setScannedBooks(scannedBooks = new ArrayList<>());
+            setScannedBooks(scannedBooks = new ArrayList<>(result));
         } else {
             scannedBooks.addAll(
                     booksByScore.size() >= booksPerDay ?
@@ -144,6 +144,12 @@ public class Library {
                             booksByScore.stream().limit(booksByScore.size()).collect(Collectors.toList())
             );
         }
+
+        booksByScore =
+                booksByScore
+                        .stream()
+                        .skip(Math.min(booksByScore.size(), booksPerDay))
+                        .collect(Collectors.toList());
 
         return result;
     }
