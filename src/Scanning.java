@@ -15,7 +15,7 @@ public class Scanning {
         // Ustawiamy biblioteki w kolejności od najwyższego pointera
         List<Library> orderedLibraries =
                 libraryList.stream()
-                        .sorted(Comparator.comparing(Library::getPointer))
+                        .sorted(Comparator.comparing(e -> -e.getPointer()))
                         .collect(Collectors.toList());
 
         /*
@@ -25,10 +25,7 @@ public class Scanning {
           ksiązki z aktualnej biblioteki zostały usunięte to usuwamy bibliotekę, ponieważ skanowanie książek będzie bezpunktowe.
 
          */
-//TODO - przemysleć czy nie zmienić na pętle  foreach
-//        for (Library orderedLibrary : orderedLibraries) {
-//            orderedLibrary.
-//        }
+
         List<Library> finalOrderedLibraries = orderedLibraries;
         orderedLibraries.forEach(library -> {
             List<Integer> tmpList = new ArrayList<>();
@@ -76,6 +73,7 @@ public class Scanning {
             library.setBooksByScore(tmpList);
             library.setBooksByScoreLength(library.getBooksByScore().size());
         });
+
         orderedLibraries =
                 orderedLibraries
                         .stream()
@@ -86,7 +84,7 @@ public class Scanning {
         orderedLibraries =
                 orderedLibraries
                         .stream()
-                        .sorted(Comparator.comparing(Library::getPointer))
+                        .sorted(Comparator.comparing(e-> -e.getPointer()))
                         .collect(Collectors.toList());
 
         /*
@@ -142,12 +140,6 @@ public class Scanning {
 
         }
 
-//         //Przypisujemy pierwszy i będziemy zwiększać w pętli, żeby od razu nie iterować po wszystkich posortowanych bibliotekach
-//        int orderedLibrariesCounter = orderedLibraries.size();
-//        List<Library> copiedOrderedLibraries = new ArrayList<Library>();
-//        copiedOrderedLibraries.add(orderedLibraries.get(0));
-//        orderedLibrariesCounter--;
-
         //Proces skanowania
         for (int i = 0; i <= days; i++) {
 
@@ -169,20 +161,6 @@ public class Scanning {
                     allScannedBooks.addAll(library.scanningProcess(allScannedBooks));
                 }
 
-//                //Jeśli w ostatniej bibliotece trwa rejestracja to nie dodajemy kolejnych
-//                if ( copiedOrderedLibraries.get(copiedOrderedLibraries.size() - 1).isSignUpProcessing()) {
-//                    continue;
-//                }
-//
-//                //Kolejny element do zainsertowania
-//                Library firstElementToInsert = orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1);
-//
-//                //Jeśli nie ma pierwszego elementu to nie dodajemy
-//                if (firstElementToInsert == null) { continue;}
-//
-//                //Insertujemy element do listy i podnosimy licznik
-//                copiedOrderedLibraries.add(orderedLibraries.get(orderedLibraries.size() - orderedLibrariesCounter - 1));
-//                orderedLibrariesCounter--;
             }
         }
             int countScannedLibraries =

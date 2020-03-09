@@ -16,17 +16,17 @@ public class GoogleBooks {
 
         Map<String, String> dataSets = new HashMap<String, String>() {
             {
-                put("a_example.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/a_example.txt"))));
-//                put("b_read_on.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/b_read_on.txt"))));
-//                put("c_incunabula.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/c_incunabula.txt"))));
-//                put("d_tough_choices.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/d_tough_choices.txt"))));
-//                put("e_so_many_books.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/e_so_many_books.txt"))));
-//                put("f_libraries_of_the_world.txt", new String ( Files.readAllBytes( Paths.get("/Users/jakubbrzostek/IdeaProjects/Hashcode20/src/main/resources/f_libraries_of_the_world.txt"))));
+                put("a_example.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/a_example.txt"))));
+//                put("b_read_on.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/b_read_on.txt"))));
+//                put("c_incunabula.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/c_incunabula.txt"))));
+//                put("d_tough_choices.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/d_tough_choices.txt"))));
+//                put("e_so_many_books.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/e_so_many_books.txt"))));
+//                put("f_libraries_of_the_world.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/f_libraries_of_the_world.txt"))));
             }
         };
 
         for (Map.Entry<String, String> dataSet : dataSets.entrySet()) {
-            String[] splitted = dataSet.getValue().split("\n");
+            String[] splitted = dataSet.getValue().split("\\r?\\n");
             int books = Integer.parseInt(splitted[0].split(" ")[0]);
             int days = Integer.parseInt(splitted[0].split(" ")[2]);
             int[] scores = Arrays.stream(splitted[1].split(" ")).mapToInt(Integer::parseInt).toArray();

@@ -76,7 +76,6 @@ public class Library {
                             .stream()
                             .limit(maxPossibleBooks)
                             .collect(Collectors.toList());
-                    //booksByScore.subList(0, (int) maxPossibleBooks);
         }
 
         setBooksByScoreLength(booksByScore.size());
@@ -131,20 +130,20 @@ public class Library {
     public List<Integer> scanningProcess(List<Integer> allScannedBooks) {
 
         List<Integer> result = new ArrayList<>(
-                booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size()))
+                booksByScore.size() >= booksPerDay ?
+                        booksByScore.stream().limit(booksPerDay).collect(Collectors.toList()) :
+                        booksByScore.stream().limit(booksByScore.size()).collect(Collectors.toList())
         ) {};
 
         if (getScannedBooks() == null) {
             scannedBooks = new ArrayList<>();
         } else {
-
-            getScannedBooks().addAll(booksByScore.subList(0, Math.min(booksPerDay, booksByScore.size() ) ) );
+            scannedBooks.addAll(
+                    booksByScore.size() >= booksPerDay ?
+                            booksByScore.stream().limit(booksPerDay).collect(Collectors.toList()) :
+                            booksByScore.stream().limit(booksByScore.size()).collect(Collectors.toList())
+            );
         }
-
-        booksByScore =
-                booksByScore.stream()
-                        .skip(Math.min(booksByScore.size(), booksPerDay))
-                        .collect(Collectors.toList());
 
         return result;
     }
