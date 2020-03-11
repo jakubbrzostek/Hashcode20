@@ -12,18 +12,16 @@ public class Scanning {
 
     public void process(List<Library> libraryList, int days, Map<Integer, Integer> orderedBookScores, String resultPath) throws IOException {
 
-        // Ustawiamy biblioteki w kolejności od najwyższego pointera
+        // Sort libraries from highest pointer
         List<Library> orderedLibraries =
                 libraryList.stream()
                         .sorted(Comparator.comparing(e -> -e.getPointer()))
                         .collect(Collectors.toList());
 
         /*
-
-        Dla każdej biblioteki sprawdzamy czy książki do skanowania nie pojawiły się w zaagregowanej tabeli wszystkich książek (distinct)
-         z poprzednich bibliotek. Jeśli jakaś książka z danej biblioteki pojawia się w aktualnej bibliotece to ją usuwamy - jeżeli wszystkie
-          ksiązki z aktualnej biblioteki zostały usunięte to usuwamy bibliotekę, ponieważ skanowanie książek będzie bezpunktowe.
-
+        For each library check if books to be scanned appeared in aggregated array of all scanned books (distinct)
+        from previous libraries. If any appear in currently scanned library - we're removing this book because we won't
+        gain any extra points for that. After all if library become empty - we're removing library.
          */
 
         List<Library> finalOrderedLibraries = orderedLibraries;
@@ -42,11 +40,8 @@ public class Scanning {
         });
 
         /*
-
-        Dla każdej biblioteki sprawdzamy czy nie usuneliśmy jakiejś książki, a jeśli usunęliśmy i są jakieś książki w tablicy usuniętych
-         z etapu pierwszego obliczania danych( Library.calculateValues() ) to dodajemy. Usuwamy wszystkie biblioteki, które nie mają książek
-          do zeskanowania. Na nowo obliczamy wskaźnik - mógł się zmienić.
-
+        For each library check if we removed any books - if so add them back from deletedbooks array at part 1 ( Library.calculateValues() )
+        Remove all libraries that're not containing any books to be scanned. Count pointer one more time - it's possible that's been changed.
          */
 
         orderedLibraries.forEach(library -> {
@@ -88,11 +83,8 @@ public class Scanning {
                         .collect(Collectors.toList());
 
         /*
-
-        Jeśli suma dni rejestracji bibliotek >= liczbie wszystkich dni, to wiemy, że ostatnia biblioteka nie zeskanuje
-        żadnej książki, tak więc szukamy jakiejś co zdobyła by dla nas kilka dodatkowych punktów i podmieniamy, nawet
-        jeśli miała by zeskanować jedną książke
-
+        Checking if sum of days for signing up all libraries >= days - if so, we know that last library won't scan any book
+        so we're looking for some that would gain some extra points for us and we're switching them.
          */
 
         int daysSum = 0;
@@ -140,14 +132,14 @@ public class Scanning {
 
         }
 
-        //Proces skanowania
+        //Scanning process
         for (int i = 0; i <= days; i++) {
 
             for (Library library : orderedLibraries) {
 
                 Library actualSignUpLibrary = orderedLibraries.stream().filter(Library::isSignUpProcessing).findFirst().orElse(null);
 
-                //Przypisujemy tylko niezeskanowane ksiażki
+                //Leaving only unscanned books
                 library.setBooksByScore(
                         library.getBooksByScore()
                                 .stream()
@@ -157,7 +149,7 @@ public class Scanning {
                 if (library.getSignUpProcessDays() == 0 && library.getBooksByScore().size() > 0 ||
                         (actualSignUpLibrary == null || actualSignUpLibrary.equals(library)) && library.signUpProcess()
                 ) {
-                    //Skanujemy i przypisujemy zeskanowane do listy wszystkich zeskanowanych
+                    //Scanning process and adding to all scanned books list
                     allScannedBooks.addAll(library.scanningProcess(allScannedBooks));
                 }
 

@@ -17,11 +17,11 @@ public class GoogleBooks {
         Map<String, String> dataSets = new HashMap<String, String>() {
             {
                 put("a_example.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/a_example.txt"))));
-//                put("b_read_on.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/b_read_on.txt"))));
-//                put("c_incunabula.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/c_incunabula.txt"))));
-//                put("d_tough_choices.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/d_tough_choices.txt"))));
-//                put("e_so_many_books.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/e_so_many_books.txt"))));
-//                put("f_libraries_of_the_world.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/f_libraries_of_the_world.txt"))));
+                put("b_read_on.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/b_read_on.txt"))));
+                put("c_incunabula.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/c_incunabula.txt"))));
+                put("d_tough_choices.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/d_tough_choices.txt"))));
+                put("e_so_many_books.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/e_so_many_books.txt"))));
+                put("f_libraries_of_the_world.txt", new String ( Files.readAllBytes( Paths.get("./src/main/resources/f_libraries_of_the_world.txt"))));
             }
         };
 
